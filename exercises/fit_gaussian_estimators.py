@@ -16,13 +16,13 @@ def test_univariate_gaussian():
     # Question 2 - Empirically showing sample mean is consistent
     estimated_mean = []
     mu = 10
-    ms = np.linspace(10, 1000, 100).astype(np.int)
-    for m in ms:
+    interval = np.linspace(10, 1000, 100).astype(np.int)
+    for m in interval:
         part_sample_mean = np.mean(x[:m])
         distance = np.abs(part_sample_mean - mu)
         estimated_mean.append(distance)
 
-    fig = go.Figure([go.Scatter(x=ms, y=estimated_mean, mode='markers+lines', name=r'$\widehat\mu$')],
+    fig = go.Figure([go.Scatter(x=interval, y=estimated_mean, mode='markers+lines', name=r'$\widehat\mu$')],
                     layout=go.Layout(
                         title=r"$\text{(2) Distance Between The Estimated And True Value Of The Expectation As Function Of Number Of Samples}$",
                         xaxis_title="$\\text{m- number of samples}$",
@@ -53,27 +53,28 @@ def test_multivariate_gaussian():
 
     # Question 5 - Likelihood evaluation
     log_likelihood_matrix = []
-    ms = np.linspace(-10, 10, 200)
-    max_log_like = np.NINF
+    interval = np.linspace(-10, 10, 200)
+
+    max_log_like = np.NINF  # -infinity
     f3_max, f1_max = -10, -10
 
-    for f_1 in ms:
-        temp = []
-        for f_3 in ms:
+    for f_1 in interval:
+        temp_f_3_likelihoods = []
+        for f_3 in interval:
             mu = np.array([f_1, 0, f_3, 0])
             log_likelihood = random.log_likelihood(mu, cov, x)
-            temp.append(log_likelihood)
-            if max_log_like < log_likelihood:
+            temp_f_3_likelihoods.append(log_likelihood)
+            if max_log_like < log_likelihood:  # calculate the max val of f1, f3
                 max_log_like = log_likelihood
                 f3_max = f_3
                 f1_max = f_1
-        log_likelihood_matrix.append(temp[:])
+        log_likelihood_matrix.append(temp_f_3_likelihoods[:])
 
-    fig = go.Figure(go.Contour(x=ms, y=ms, z=log_likelihood_matrix))
+    fig = go.Figure(go.Contour(x=interval, y=interval, z=log_likelihood_matrix))
     fig.update_layout(xaxis_title="r$\\text { f(1) values}$", yaxis_title="r$\\text {f(3) values}$",
                       title=r"$Log-Likelihood Functions$",
-                      height=600, width=500).show()
-
+                      height=600, width=500)
+    fig.show()
     # # Question 6 - Maximum likelihood
     print(f1_max, f3_max)
 
