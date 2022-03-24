@@ -52,13 +52,32 @@ def test_multivariate_gaussian():
     print(random.cov_)
 
     # Question 5 - Likelihood evaluation
+    log_likelihood_matrix = []
+    ms = np.linspace(-10, 10, 200)
+    max_log_like = np.NINF
+    f3_max, f1_max = -10, -10
+
+    for f_1 in ms:
+        inner = []
+        for f_3 in ms:
+            mu = np.array([f_1, 0, f_3, 0])
+            log_likelihood = random.log_likelihood(mu, cov, x)
+            inner.append(log_likelihood)
+            if max_log_like < log_likelihood:
+                max_log_like = log_likelihood
+                f3_max = f_3
+                f1_max = f_1
+        log_likelihood_matrix.append(inner[:])
+
+    #fig = go.Figure(go.contour(z=log_likelihood_matrix, x=)) #TODO complete
+
 
 
     # # Question 6 - Maximum likelihood
-    # raise NotImplementedError()
+    print(f1_max, f3_max)
 
 
 if __name__ == '__main__':
     np.random.seed(0)
-    # test_univariate_gaussian()
+    test_univariate_gaussian()
     test_multivariate_gaussian()
