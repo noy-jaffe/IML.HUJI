@@ -35,7 +35,6 @@ class UnivariateGaussian:
         self.biased_ = biased_var
         self.fitted_, self.mu_, self.var_ = False, None, None
 
-
     def fit(self, X: np.ndarray) -> UnivariateGaussian:
         """
         Estimate Gaussian expectation and variance from given samples
@@ -82,15 +81,11 @@ class UnivariateGaussian:
             raise ValueError("Estimator must first be fitted before calling `pdf` function")
         mu = self.mu_
         sigma = self.var_
-        first_param = 1/(np.sqrt(2*np.pi*sigma*sigma))
-        mu_distance= np.power(X-mu,2)
-        exp_param = (-1/(2*sigma*sigma)) * mu_distance
+        first_param = 1 / (np.sqrt(2 * np.pi * sigma * sigma))
+        mu_distance = np.power(X - mu, 2)
+        exp_param = (-1 / (2 * sigma * sigma)) * mu_distance
         pdf = first_param * np.exp(exp_param)
         return pdf
-
-
-
-
 
     @staticmethod
     def log_likelihood(mu: float, sigma: float, X: np.ndarray) -> float:
@@ -189,19 +184,17 @@ class MultivariateGaussian:
         """
         if not self.fitted_:
             raise ValueError("Estimator must first be fitted before calling `pdf` function")
-        num_of_sampels =X.shape[0]
-        first_param = 1 / ((np.sqrt((2*np.pi), num_of_sampels)) * np.linalg.det(self.cov_))
+        num_of_sampels = X.shape[0]
+        first_param = 1 / ((np.sqrt((2 * np.pi), num_of_sampels)) * np.linalg.det(self.cov_))
         pdfs = []
         for i in range(num_of_sampels):
-            mu_matrix = (X[i]-self.mu_)
+            mu_matrix = (X[i] - self.mu_)
             t_mu_matrix = mu_matrix.transpose()
-            cov_inverse = np.numpy. linalg. inv(self.cov_)
-            exp_param = (-1/2) * t_mu_matrix * cov_inverse * mu_matrix
+            cov_inverse = np.numpy.linalg.inv(self.cov_)
+            exp_param = (-1 / 2) * t_mu_matrix * cov_inverse * mu_matrix
             pdf = first_param * np.exp(exp_param)
             pdfs.append(pdf)
         return pdfs
-
-
 
     @staticmethod
     def log_likelihood(mu: np.ndarray, cov: np.ndarray, X: np.ndarray) -> float:
@@ -225,18 +218,9 @@ class MultivariateGaussian:
         num_of_samples = X.shape[0]
         d_features = X.shape[1]
 
-        log_param = 1 / ((np.sqrt((2*np.pi) ** d_features)) * np.linalg.det(cov))
+        log_param = 1 / ((np.sqrt((2 * np.pi) ** d_features)) * np.linalg.det(cov))
         mu_matrix = (X - mu)
         cov_inverse = np.linalg.inv(cov)
-        sec_param = (-1/2) * np.sum((mu_matrix) @ cov_inverse * mu_matrix)
-        log_likelihood = num_of_samples * np.log(log_param) * sec_param
+        sec_param = (1 / 2) * np.sum((mu_matrix) @ cov_inverse * mu_matrix)
+        log_likelihood = num_of_samples * np.log(log_param) - sec_param
         return log_likelihood
-
-
-
-
-
-
-
-
-

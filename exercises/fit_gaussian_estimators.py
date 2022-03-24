@@ -58,20 +58,21 @@ def test_multivariate_gaussian():
     f3_max, f1_max = -10, -10
 
     for f_1 in ms:
-        inner = []
+        temp = []
         for f_3 in ms:
             mu = np.array([f_1, 0, f_3, 0])
             log_likelihood = random.log_likelihood(mu, cov, x)
-            inner.append(log_likelihood)
+            temp.append(log_likelihood)
             if max_log_like < log_likelihood:
                 max_log_like = log_likelihood
                 f3_max = f_3
                 f1_max = f_1
-        log_likelihood_matrix.append(inner[:])
+        log_likelihood_matrix.append(temp[:])
 
-    #fig = go.Figure(go.contour(z=log_likelihood_matrix, x=)) #TODO complete
-
-
+    fig = go.Figure(go.Contour(x=ms, y=ms, z=log_likelihood_matrix))
+    fig.update_layout(xaxis_title="r$\\text { f(1) values}$", yaxis_title="r$\\text {f(3) values}$",
+                      title=r"$Log-Likelihood Functions$",
+                      height=600, width=500).show()
 
     # # Question 6 - Maximum likelihood
     print(f1_max, f3_max)
